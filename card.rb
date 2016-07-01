@@ -24,14 +24,8 @@ class Card
     end
   end
 
+  def acevalchange
+    self.value = 1 if face == "Ace"
+  end
+
 end
-
-
-
-
-
-# gt.player.each do |x|
-#   puts "#{x.face} of #{x.suit}"
-# end
-#
-# gt.player.map{|x| puts "#{x.face} of #{x.suit}"}

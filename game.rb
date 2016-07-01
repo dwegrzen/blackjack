@@ -1,15 +1,16 @@
 require "./deck.rb"
 
-
 class Game
-  attr_accessor :player, :name, :dealer, :deck
+  attr_accessor :player, :name, :dealer, :deck, :pwins, :totalgames, :totalblackjacks
 
   def initialize(name="Jack")
     @name = name
     @dealer = []
     @player = []
     @deck = Deck.new
-    @discard = []
+    @pwins = 0
+    @totalgames = 0
+    @totalblackjacks = 0
   end
 
   def play
@@ -35,7 +36,7 @@ class Game
     dealershow1
     playershow
     handvalue
-    puts "BLACKJACK!" if playervalue == 21
+    blackjack if playervalue == 21
     hitorstand if playervalue <21 && dealervalue != 21
   end
 
@@ -59,6 +60,11 @@ class Game
     puts playervalue
   end
 
+  def blackjack
+    puts "BLACKJACK!"
+    self.totalblackjacks += 1
+  end
+
   def playervalue
     player.inject(0){|sum,x| sum += x.value}
   end
@@ -79,8 +85,16 @@ class Game
   def hitloop
     @player += @deck.draw
     playershow
+    acevaluecheck
     handvalue
     bustmessage
+  end
+
+  def acevaluecheck
+    if playervalue > 21 && player.any?{|x| x.face == "Ace"}
+      self.player.select{|x| x.face == "Ace"}.map{|x| x.acevalchange}
+      puts "Your ace value is now 1"
+    end
   end
 
   def bustmessage
@@ -108,8 +122,10 @@ class Game
   def playerwins
     if (playervalue > dealervalue && playervalue <22) || (playervalue < 22 && dealervalue >21)
       puts "Congratulations #{name}, you win!"
+      self.pwins += 1
     elsif (playervalue < 21 && player.length>5)
       puts "Congratulations #{name}, you win since you have over 5 cards!"
+      self.pwins += 1
     end
   end
 
@@ -126,6 +142,7 @@ class Game
   end
 
   def playagain
+    self.totalgames += 1
     puts "Would you like to play another game?"
     response = gets.chomp&.downcase[0]
     if response == "y"
@@ -133,6 +150,7 @@ class Game
       play
     else
       puts "OK then, thanks for playing."
+      gamestats
     end
   end
 
@@ -145,6 +163,10 @@ class Game
     shoecheck
     dealer.clear
     player.clear
+  end
+
+  def gamestats
+    puts "You played #{totalgames} games of blackjack and won #{pwins} of them. You had #{totalblackjacks} blackjacks."
   end
 
 end
