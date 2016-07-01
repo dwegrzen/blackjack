@@ -1,10 +1,11 @@
 require './card.rb'
 
 class Deck
-  attr_accessor :cards
+  attr_accessor :cards, :shoe
 
   def initialize
-    @cards = Card.faces.map{|face| Card.suits.map{|suit| Card.new(face,suit)}}.flatten.shuffle
+    # @cards = Card.faces.map{|face| Card.suits.map{|suit| Card.new(face,suit)}}.flatten.shuffle
+    @shoe = 7.times.map{Card.faces.map{|face| Card.suits.map{|suit| Card.new(face,suit)}}}.flatten.shuffle
   end
 
   def howmanyleft?
@@ -12,7 +13,7 @@ class Deck
   end
 
   def draw(num=1)
-    cards.shift(num)
+    shoe.shift(num)
   end
 
   def nocards
@@ -20,10 +21,6 @@ class Deck
       puts "Out of cards"
     end
   end
-
-  # def newdeck
-  #   self.cards = FACES.map{|face| SUITS.map{|suit| Card.new(face,suit)}}.flatten.shuffle
-  # end
 
   def shuffledeck
     @cards.shuffle!

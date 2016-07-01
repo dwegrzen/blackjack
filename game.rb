@@ -136,8 +136,13 @@ class Game
     end
   end
 
+  def shoecheck
+    puts "There are #{deck.shoe.length} cards remaining, new shoe in #{deck.shoe.length-52} cards."
+    self.deck = Deck.new if deck.shoe.length < 52
+  end
+
   def gamereset
-    self.deck=Deck.new
+    shoecheck
     dealer.clear
     player.clear
   end
