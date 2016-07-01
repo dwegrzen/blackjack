@@ -73,7 +73,6 @@ class Game
       puts "Would you like to hit or stand?"
       response = gets.chomp&.downcase[0]
       hitloop if response == "h"
-      end
     end
   end
 
@@ -81,7 +80,7 @@ class Game
     @player += @deck.draw
     playershow
     handvalue
-    checkplayerbust
+    bustmessage
   end
 
   def bustmessage
@@ -104,7 +103,6 @@ class Game
     playerwins
     dealerwins
     tie
-    bust
   end
 
   def playerwins
@@ -116,8 +114,7 @@ class Game
   end
 
   def dealerwins
-    if player.length<5
-    puts "Sorry, dealer wins." if (dealervalue > playervalue && dealervalue < 22) || (dealervalue < 22 && playervalue > 21)
+    puts "Sorry, dealer wins." if (((dealervalue > playervalue && dealervalue < 22) || (dealervalue < 22 && playervalue > 21)) && player.length < 6)
   end
 
   def tie
@@ -126,10 +123,6 @@ class Game
       puts "It's a tie, but since the dealer had more cards in hand, you lose." if player.length < dealer.length
       puts "It's a tie and you and the dealer had the same number of cards in hand, so you win!" if player.length == dealer.length
     end
-  end
-
-  def bust
-    puts "You and the dealer bust, it's a push." if playervalue >21 && dealervalue >21
   end
 
   def playagain
@@ -150,3 +143,6 @@ class Game
   end
 
 end
+
+
+# = 3.times.map{Card.new(3,"Clubs")}
