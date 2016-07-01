@@ -6,7 +6,7 @@ class Card
   end
 
   def self.suits
-    ["Heart", "Diamond", "Spade", "Club"]
+    ["Hearts", "Diamonds", "Spades", "Clubs"]
   end
 
   def initialize(face,suit)
@@ -25,3 +25,13 @@ class Card
   end
 
 end
+
+
+
+
+
+# gt.player.each do |x|
+#   puts "#{x.face} of #{x.suit}"
+# end
+#
+# gt.player.map{|x| puts "#{x.face} of #{x.suit}"}
