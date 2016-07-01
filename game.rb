@@ -16,7 +16,7 @@ class Game
     intro
     deal
     playeraction
-    dealeraction
+    dealeraction unless playervalue > 21
     evaluatehands
     # outcome
     playagain
@@ -36,11 +36,12 @@ class Game
     playershow
     handvalue
     puts "BLACKJACK!" if playervalue == 21
-    hitorstand if playervalue <21
+    hitorstand if playervalue <21 && dealervalue != 21
   end
 
   def dealershow1
     puts "Dealer is showing a #{dealer.first.face} of #{dealer.first.suit}."
+    puts "Dealer has a blackjack!" if dealervalue == 21
   end
 
   def dealershowall
@@ -71,8 +72,7 @@ class Game
     until response == "s" or playervalue >= 21
       puts "Would you like to hit or stand?"
       response = gets.chomp&.downcase[0]
-      if response == "h"
-      hitloop
+      hitloop if response == "h"
       end
     end
   end
@@ -84,14 +84,7 @@ class Game
     checkplayerbust
   end
 
-  # def dealerhitloop
-  #   @dealer += @deck.draw
-  #   puts "Dealer has:"
-  #   player.map{|x| puts "#{x.face} of #{x.suit}"}
-  # end
-
-
-  def checkplayerbust
+  def bustmessage
     puts "Oh no, you've busted." if playervalue > 21
   end
 
@@ -108,17 +101,35 @@ class Game
   end
 
   def evaluatehands
-    if (dealervalue > playervalue && dealervalue < 22) || (dealervalue < 22 && playervalue > 21)
-      puts "Sorry, dealer wins."
-    elsif (playervalue > dealervalue && playervalue <22) || (playervalue < 22 && dealervalue >21)
+    playerwins
+    dealerwins
+    tie
+    bust
+  end
+
+  def playerwins
+    if (playervalue > dealervalue && playervalue <22) || (playervalue < 22 && dealervalue >21)
       puts "Congratulations #{name}, you win!"
-    elsif playervalue == dealervalue
-      puts "It's a tie, but guess what, you win!"
-    elsif playervalue >21 && dealervalue >21
-      puts "You and the dealer bust, it's a push."
-    else
-      puts "check conditions, outside of evaluatehands"
+    elsif (playervalue < 21 && player.length>5)
+      puts "Congratulations #{name}, you win since you have over 5 cards!"
     end
+  end
+
+  def dealerwins
+    if player.length<5
+    puts "Sorry, dealer wins." if (dealervalue > playervalue && dealervalue < 22) || (dealervalue < 22 && playervalue > 21)
+  end
+
+  def tie
+    if playervalue == dealervalue && playervalue <22 && dealervalue <22
+      puts "It's a tie, but you had more cards in your hand so you win!" if player.length > dealer.length
+      puts "It's a tie, but since the dealer had more cards in hand, you lose." if player.length < dealer.length
+      puts "It's a tie and you and the dealer had the same number of cards in hand, so you win!" if player.length == dealer.length
+    end
+  end
+
+  def bust
+    puts "You and the dealer bust, it's a push." if playervalue >21 && dealervalue >21
   end
 
   def playagain
