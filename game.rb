@@ -19,7 +19,6 @@ class Game
     playeraction
     dealeraction unless playervalue > 21
     evaluatehands
-    # outcome
     playagain
   end
 
@@ -85,15 +84,15 @@ class Game
   def hitloop
     @player += @deck.draw
     playershow
-    acevaluecheck
+    acevaluecheck(playervalue,player)
     handvalue
     bustmessage
   end
 
-  def acevaluecheck
-    if playervalue > 21 && player.any?{|x| x.face == "Ace"}
-      self.player.select{|x| x.face == "Ace"}.map{|x| x.acevalchange}
-      puts "Your ace value is now 1"
+  def acevaluecheck(score,user)
+    if score > 21 && user.any?{|x| x.face == "Ace"}
+      user.select{|x| x.face == "Ace"}.map{|x| x.acevalchange}
+      puts "Ace value is now 1."
     end
   end
 
@@ -105,8 +104,9 @@ class Game
     dealershowall
     puts "Dealer has a #{dealervalue}."
     while dealervalue < 16
-      puts "Dealer hits!"
       @dealer += @deck.draw
+      puts "Dealer hits and draws a #{dealer.last.face} of #{dealer.last.suit}."
+      acevaluecheck(dealervalue,dealer)
       dealershowall
       puts "Dealer has a #{dealervalue}."
     end
@@ -134,10 +134,16 @@ class Game
   end
 
   def tie
-    if playervalue == dealervalue && playervalue <22 && dealervalue <22
-      puts "It's a tie, but you had more cards in your hand so you win!" if player.length > dealer.length
-      puts "It's a tie, but since the dealer had more cards in hand, you lose." if player.length < dealer.length
-      puts "It's a tie and you and the dealer had the same number of cards in hand, so you win!" if player.length == dealer.length
+    if (playervalue == dealervalue && playervalue <22 && dealervalue <22)
+      if player.length > dealer.length
+        puts "It's a tie, but you had more cards in your hand so you win!"
+        self.pwins += 1
+      elsif player.length == dealer.length
+        puts "It's a tie and you and the dealer had the same number of cards in hand, so you win!"
+        self.pwins += 1
+      else player.length < dealer.length
+        puts "It's a tie, but since the dealer had more cards in hand, you lose."
+      end
     end
   end
 

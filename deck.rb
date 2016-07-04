@@ -16,12 +16,6 @@ class Deck
     shoe.shift(num)
   end
 
-  def nocards
-    if @cards.length==0
-      puts "Out of cards"
-    end
-  end
-
   def shuffledeck
     @cards.shuffle!
   end
