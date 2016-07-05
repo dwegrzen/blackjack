@@ -17,7 +17,7 @@ class Deck
   end
 
   def shuffledeck
-    @cards.shuffle!
+    @shoe.shuffle!
   end
 
 end
